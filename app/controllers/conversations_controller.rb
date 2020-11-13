@@ -18,9 +18,14 @@ class ConversationsController < ApplicationController
   end
 
   def reply
+    if
+    message_params[:body].present?
     current_user.reply_to_conversation(conversation, message_params[:body])
     flash[:notice] = 'Your reply message was successfully sent!'
     redirect_to conversation_path(conversation)
+    else
+      redirect_to mailbox_inbox_path, notice: 'Please write a message'
+    end
   end
 
   def trash
@@ -40,7 +45,7 @@ class ConversationsController < ApplicationController
   end
 
   def message_params
-    params.require(:message).permit(:body, :subject)
+    params.require(:message).permit(:subject, :body)
   end
 
 end
